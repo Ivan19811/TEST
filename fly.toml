@@ -1,0 +1,21 @@
+app = "shifttimeproxy"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "3000"
+
+[[services]]
+  internal_port = 3000
+  protocol = "tcp"
+  auto_start = true
+  auto_stop = true
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
