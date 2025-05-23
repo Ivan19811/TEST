@@ -9,7 +9,7 @@ async function sendValue() {
   const status = document.getElementById("status");
 
   try {
-    const response = await fetch("https://shifttimeproxy.fly.dev/write", {
+    const response = await fetch("https://test-jfg9.onrender.com/write", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ value: Number(value) })
@@ -24,7 +24,7 @@ async function sendValue() {
 async function fetchLastValue() {
   const output = document.getElementById("last-value");
   try {
-    const response = await fetch("https://shifttimeproxy.fly.dev/last");
+    const response = await fetch("https://test-jfg9.onrender.com/last");
     const data = await response.json();
     output.textContent = data.value ?? "немає";
   } catch {
