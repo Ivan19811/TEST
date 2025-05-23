@@ -1,36 +1,55 @@
-<input type="number" id="numberInput">
-<button onclick="sendValue()">Надіслати</button>
-<p id="status"></p>
-<p><strong>Останнє число:</strong> <span id="last-value">Завантаження...</span></p>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>ShiftTime: Запис числа</title>
+</head>
+<body>
+  <h2>Введіть число</h2>
+  <input type="number" id="numberInput" placeholder="123">
+  <button onclick="sendValue()">Надіслати</button>
 
-<script>
-async function sendValue() {
-  const value = document.getElementById("numberInput").value;
-  const status = document.getElementById("status");
+  <p id="status"></p>
 
-  try {
-    const response = await fetch("https://test-jfg9.onrender.com/write", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ value: Number(value) })
-    });
-    const data = await response.json();
-    status.textContent = "✅ Успішно записано: " + JSON.stringify(data);
-  } catch (error) {
-    status.textContent = "❌ Помилка: " + error.message;
-  }
-}
+  <div style="margin-top: 20px;">
+    <strong>Останнє число:</strong> <span id="last-value">Завантаження...</span>
+  </div>
 
-async function fetchLastValue() {
-  const output = document.getElementById("last-value");
-  try {
-    const response = await fetch("https://test-jfg9.onrender.com/last");
-    const data = await response.json();
-    output.textContent = data.value ?? "немає";
-  } catch {
-    output.textContent = "Помилка";
-  }
-}
+  <script>
+    const PROXY_URL = "https://test-j3fg.onrender.com"; // ← Твоя адреса Render
 
-fetchLastValue();
-</script>
+    async function sendValue() {
+      const value = document.getElementById("numberInput").value;
+      const status = document.getElementById("status");
+
+      try {
+        const response = await fetch(`${PROXY_URL}/write`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ value: Number(value) })
+        });
+
+        const data = await response.json();
+        status.textContent = "✅ Успішно записано: " + JSON.stringify(data);
+        fetchLastValue();
+      } catch (error) {
+        status.textContent = "❌ Помилка: " + error.message;
+      }
+    }
+
+    async function fetchLastValue() {
+      const span = document.getElementById("last-value");
+      try {
+        const response = await fetch(`${PROXY_URL}/last`);
+        const data = await response.json();
+        span.textContent = data.value ?? "Порожньо";
+      } catch (err) {
+        span.textContent = "Помилка";
+      }
+    }
+
+    // Завантажити останнє число при відкритті
+    fetchLastValue();
+  </script>
+</body>
+</html>
